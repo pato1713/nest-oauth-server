@@ -6,6 +6,8 @@ services:
     restart: always
     environment:
       - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
     container_name: postgres
     # volumes:
     #   - ./pgdata:/var/lib/postgresql/data
@@ -16,11 +18,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: nest-docker-postgres
+    container_name: nest-oauth-container
+    env_file:
+      - '.env'
     environment:
       - PORT=${PORT}
     ports:
-      - '3000:3000'
+      - 3000:3000
+      - 9229:9229
     depends_on:
       - db
     volumes:

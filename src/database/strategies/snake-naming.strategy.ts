@@ -9,14 +9,8 @@ export class SnakeNamingStrategy
     return userSpecifiedName ? userSpecifiedName : snakeCase(targetName);
   }
 
-  columnName(
-    propertyName: string,
-    customName: string,
-    embeddedPrefixes: string[],
-  ): string {
-    return snakeCase(embeddedPrefixes.join('_')) + customName
-      ? customName
-      : snakeCase(propertyName);
+  columnName(propertyName: string): string {
+    return snakeCase(propertyName);
   }
 
   relationName(propertyName: string): string {

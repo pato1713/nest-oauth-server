@@ -3,10 +3,10 @@ import { AuthenticationService } from './authentication.service';
 import { AuthenticationController } from './authentication.controller';
 import { UserModule } from 'src/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthenticationRepository } from './repositories/authentication.repository';
+import { AuthenticationEntity } from './entities/authentication.entity';
 
 @Module({
-  imports: [UserModule, TypeOrmModule.forFeature([AuthenticationRepository])],
+  imports: [UserModule, TypeOrmModule.forFeature([AuthenticationEntity])],
   providers: [AuthenticationService],
   controllers: [AuthenticationController],
 })

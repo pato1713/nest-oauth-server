@@ -6,6 +6,7 @@ import { Column, Entity, Index, JoinColumn, OneToOne } from 'typeorm';
 export class UserEntity extends AbstractEntity {
   @Column()
   public firstName: string;
+
   @OneToOne(
     () => AuthenticationEntity,
     (authentication: AuthenticationEntity) => authentication.user,

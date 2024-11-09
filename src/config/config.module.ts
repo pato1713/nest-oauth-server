@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule as NestConfigModule } from '@nestjs/config';
+import { debug } from 'console';
 import { NODE_ENV } from 'src/app/constants/app.constant';
 import { z } from 'zod';
 
@@ -15,10 +16,23 @@ const configSchema = z
   })
   .required();
 
+const parseConfig = (
+  config: Record<keyof z.infer<typeof configSchema>, any>,
+) => {
+  return {
+    ...config,
+    PORT: parseInt(config.PORT),
+    POSTGRES_PORT: parseInt(config.POSTGRES_PORT),
+  };
+};
+
 @Module({
   imports: [
     NestConfigModule.forRoot({
-      validate: configSchema.parse,
+      validate: (config) => {
+        const parsedConfig = parseConfig(config);
+        return configSchema.parse(parsedConfig);
+      },
     }),
   ],
 })

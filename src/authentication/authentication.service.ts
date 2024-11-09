@@ -1,18 +1,19 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { AuthenticationRepository } from './repositories/authentication.repository';
 import { UserService } from 'src/user/user.service';
-import { DataSource, QueryRunner } from 'typeorm';
+import { DataSource, QueryRunner, Repository } from 'typeorm';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { CreateAuthenticationDto } from './dtos/authentication.dto';
 import { AuthenticationEntity } from './entities/authentication.entity';
 import { PosgresErrorCode } from 'src/database/constraints/error.constraint';
 import { RegistrationDto } from './dtos/registration.dto';
 import { UserAlreadyExistExeption } from './exceptions/user-already-exist.exception';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
-    private readonly _authenticationRepository: AuthenticationRepository,
+    @InjectRepository(AuthenticationEntity)
+    private authenticationRepository: Repository<AuthenticationEntity>,
     private readonly _userService: UserService,
     private readonly _dataSource: DataSource,
   ) {}
@@ -56,7 +57,7 @@ export class AuthenticationService {
     createAuthenticationDto: CreateAuthenticationDto,
     queryRunner: QueryRunner,
   ): Promise<AuthenticationEntity> {
-    const authentication = this._authenticationRepository.create(
+    const authentication = this.authenticationRepository.create(
       createAuthenticationDto,
     );
     return queryRunner.manager.save(authentication);
