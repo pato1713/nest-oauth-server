@@ -1,5 +1,9 @@
 version: '3.5'
 
+volumes:
+  pgdata:
+    driver: local
+
 services:
   db:
     image: postgres
@@ -9,8 +13,8 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_DB=postgres
     container_name: postgres
-    # volumes:
-    #   - ./pgdata:/var/lib/postgresql/data
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     ports:
       - '5432:5432'
 

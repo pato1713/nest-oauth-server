@@ -4,8 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from './strategies/snake-naming.strategy';
 import { NODE_ENV } from 'src/app/constants/app.constant';
 import { AuthenticationSubsriber } from 'src/authentication/subscribers/authentication.subscriber';
-import { UserEntity } from 'src/user/entities/user.entity';
-import { AuthenticationEntity } from 'src/authentication/entities/authentication.entity';
 
 @Module({
   imports: [
@@ -23,7 +21,6 @@ import { AuthenticationEntity } from 'src/authentication/entities/authentication
         namingStrategy: new SnakeNamingStrategy(),
         synchronize: configService.get('NODE_ENV') === NODE_ENV.DEVELOPMENT,
         logging: configService.get('NODE_ENV') === NODE_ENV.DEVELOPMENT,
-        // extra: { charset: 'utf8mb4_unicode_ci' },
         subscribers: [AuthenticationSubsriber],
       }),
     }),
