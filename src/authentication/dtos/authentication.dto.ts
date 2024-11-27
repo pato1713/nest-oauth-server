@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 export class CreateAuthenticationDto {
   @IsEmail()
   @IsNotEmpty()
-  readonly emailAddress: string;
+  readonly email: string;
 
   @IsString()
   @IsNotEmpty()

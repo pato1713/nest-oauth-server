@@ -4,5 +4,5 @@ import { CreateAuthenticationDto } from 'src/authentication/dtos/authentication.
 export class CreateUserDto extends CreateAuthenticationDto {
   @IsString()
   @IsNotEmpty()
-  readonly firstName: string;
+  readonly username: string;
 }
