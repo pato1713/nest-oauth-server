@@ -12,6 +12,7 @@ const configSchema = z
     POSTGRES_USER: z.string(),
     POSTGRES_PASSWORD: z.string(),
     POSTGRES_DB: z.string(),
+    REDIS_URL: z.string(),
   })
   .required();
 

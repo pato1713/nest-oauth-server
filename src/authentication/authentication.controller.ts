@@ -5,37 +5,72 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Redirect,
+  Render,
   Req,
   Res,
+  UseFilters,
 } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { RegistrationDto } from './dtos/registration.dto';
 import { UserEntity } from 'src/user/entities/user.entity';
+import { AuthorizationDto } from './dtos/authorization.dto';
+import { AuthenticationDto } from './dtos/authentication.dto';
+import { SetCookie } from 'src/common/decorators/set-cookie.decorator';
+import { GetCookie } from 'src/common/decorators/get-cookie.decorator';
+import { url } from 'inspector';
+import { ViewExceptionFilter } from 'src/common/filters/view.exception.filter';
+import { InvalidCredentialsException } from './exceptions/invalid-credentials.exception';
+import { ExpiredCacheException } from './exceptions/expired-cache.exception';
 
 @Controller()
 export class AuthenticationController {
   constructor(private readonly _authenticationService: AuthenticationService) {}
 
-  @Get('authorize')
-  async getLoginPage(@Req() req, @Res() res) {
-    // Check if user is already logged in
-    if (req?.session?.user) {
-      // Proceed directly to consent or issue authorization code
-      return res.redirect(`/consent?client_id=${req.query.client_id}`);
-    }
-    // Render the login form
-    return res.render('login', { client_id: req.query.client_id });
+  @Post('authorize')
+  @Render('login')
+  @SetCookie('oauth_transaction', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'lax',
+    maxAge: 3600,
+  })
+  async authorize(@Body() authorization: AuthorizationDto) {
+    const transactionId =
+      await this._authenticationService.createAuthorizationTransaction(
+        authorization,
+      );
+
+    return { transaction_id: transactionId };
   }
 
   @Post('login')
-  async login(@Req() req, @Res() res) {
-    // Check if user is already logged in
-    if (req?.session?.user) {
-      // Proceed directly to consent or issue authorization code
-      return res.redirect(`/consent?client_id=${req.query.client_id}`);
+  @Redirect() // empty so url is returned
+  @UseFilters(ViewExceptionFilter)
+  async login(
+    @Body() authenticationDto: AuthenticationDto,
+    @GetCookie('oauth_transaction') transactionId: string,
+  ) {
+    const isValid =
+      await this._authenticationService._hasValidCredentials(authenticationDto);
+
+    // return to login page and display error   if credentials are invalid
+    if (!isValid) {
+      throw new InvalidCredentialsException(authenticationDto.email);
     }
-    // Render the login form
-    return res.render('login', { client_id: req.query.client_id });
+
+    const authorization =
+      await this._authenticationService.getAuthorization(transactionId);
+
+    // no authorization found - meaning the cache has expired
+    if (!authorization) {
+      throw new ExpiredCacheException();
+    }
+
+    return {
+      url: authorization.redirectUri,
+      statursCode: HttpStatus.FOUND,
+    };
   }
 
   @Get('register')
