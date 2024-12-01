@@ -19,6 +19,6 @@ import KeyvRedis from '@keyv/redis';
     },
     CacheService,
   ],
-  exports: ['CACHE_INSTANCE'],
+  exports: [CacheService],
 })
 export class CacheModule {}

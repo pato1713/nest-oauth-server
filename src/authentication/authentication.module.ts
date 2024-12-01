@@ -13,7 +13,7 @@ import { CacheService } from 'src/cache/cache.service';
     TypeOrmModule.forFeature([AuthenticationEntity]),
     CacheModule,
   ],
-  providers: [AuthenticationService, CacheService],
+  providers: [AuthenticationService],
   controllers: [AuthenticationController],
 })
 export class AuthenticationModule {}
