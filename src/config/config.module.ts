@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule as NestConfigModule } from '@nestjs/config';
-import { NODE_ENV } from 'src/app/constants/app.constant';
+import { NODE_ENV } from '@/app/constants/app.constant';
 import { z } from 'zod';
 
 const configSchema = z

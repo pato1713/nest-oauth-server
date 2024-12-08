@@ -1,18 +1,18 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { DataSource, QueryRunner, Repository } from 'typeorm';
-import { UserService } from 'src/user/user.service';
-import { UserEntity } from 'src/user/entities/user.entity';
+import { UserService } from '@/user/user.service';
+import { UserEntity } from '@/user/entities/user.entity';
 import { AuthenticationDto } from './dtos/authentication.dto';
 import { AuthenticationEntity } from './entities/authentication.entity';
-import { PosgresErrorCode } from 'src/database/constraints/error.constraint';
+import { PosgresErrorCode } from '@/database/constraints/error.constraint';
 import { RegistrationDto } from './dtos/registration.dto';
 import { UserAlreadyExistExeption } from './exceptions/user-already-exist.exception';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthorizationDto } from './dtos/authorization.dto';
-import { Transaction } from 'src/common/decorators/transaction.decorator';
+import { Transaction } from '@/common/decorators/transaction.decorator';
 import { AuthenticationProvider } from './providers/authentication.provider';
 import { randomUUID } from 'crypto';
-import { CacheService } from 'src/cache/cache.service';
+import { CacheService } from '@/cache/cache.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -36,7 +36,7 @@ export class AuthenticationService {
   }
 
   @Transaction()
-  async _hasValidCredentials(
+  async hasValidCredentials(
     authenticationDto: AuthenticationDto,
     queryRunner?: QueryRunner,
   ): Promise<boolean> {

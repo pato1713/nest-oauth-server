@@ -13,13 +13,12 @@ import {
 } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { RegistrationDto } from './dtos/registration.dto';
-import { UserEntity } from 'src/user/entities/user.entity';
+import { UserEntity } from '@/user/entities/user.entity';
 import { AuthorizationDto } from './dtos/authorization.dto';
 import { AuthenticationDto } from './dtos/authentication.dto';
-import { SetCookie } from 'src/common/decorators/set-cookie.decorator';
-import { GetCookie } from 'src/common/decorators/get-cookie.decorator';
-import { url } from 'inspector';
-import { ViewExceptionFilter } from 'src/common/filters/view.exception.filter';
+import { SetCookie } from '@/common/decorators/set-cookie.decorator';
+import { GetCookie } from '@/common/decorators/get-cookie.decorator';
+import { ViewExceptionFilter } from '@/common/filters/view.exception.filter';
 import { InvalidCredentialsException } from './exceptions/invalid-credentials.exception';
 import { ExpiredCacheException } from './exceptions/expired-cache.exception';
 
@@ -52,7 +51,7 @@ export class AuthenticationController {
     @GetCookie('oauth_transaction') transactionId: string,
   ) {
     const isValid =
-      await this._authenticationService._hasValidCredentials(authenticationDto);
+      await this._authenticationService.hasValidCredentials(authenticationDto);
 
     // return to login page and display error   if credentials are invalid
     if (!isValid) {

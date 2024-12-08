@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dtos/user.dto';
 import { UserEntity } from './entities/user.entity';
 import { QueryRunner, Repository } from 'typeorm';
-import { AuthenticationEntity } from 'src/authentication/entities/authentication.entity';
+import { AuthenticationEntity } from '@/authentication/entities/authentication.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()

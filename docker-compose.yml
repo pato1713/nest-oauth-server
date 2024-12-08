@@ -3,6 +3,8 @@ version: '3.5'
 volumes:
   pgdata:
     driver: local
+  node_modules:
+    driver: local
 
 services:
   redis:
@@ -28,15 +30,18 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: development
     container_name: nest-oauth-container
     env_file:
       - '.env'
     environment:
       - PORT=${PORT}
+      - NODE_ENV=development
     ports:
       - 3000:3000
       - 9229:9229
     depends_on:
       - db
     volumes:
-      - ./src:/app/src
+      - .:/app
+      - node_modules:/app/node_modules

@@ -7,6 +7,7 @@ import { ConfigModule } from './config/config.module';
 import { DatabaseModule } from './database/database.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { CacheModule } from './cache/cache.module';
+import { OauthClientsModule } from './oauth-clients/oauth-clients.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { CacheModule } from './cache/cache.module';
     ConfigModule,
     AuthenticationModule,
     CacheModule,
+    OauthClientsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

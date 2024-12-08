@@ -8,7 +8,7 @@ import { AuthenticationEntity } from '../entities/authentication.entity';
 import { AuthenticationProvider } from '../providers/authentication.provider';
 
 @EventSubscriber()
-export class AuthenticationSubsriber
+export class AuthenticationSubscriber
   implements EntitySubscriberInterface<AuthenticationEntity>
 {
   listenTo(): Function | string {
