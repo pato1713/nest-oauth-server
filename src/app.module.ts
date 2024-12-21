@@ -8,6 +8,7 @@ import { DatabaseModule } from './database/database.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { CacheModule } from './cache/cache.module';
 import { OauthClientsModule } from './oauth-clients/oauth-clients.module';
+import { SeederModule } from './seeder/seeder.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { OauthClientsModule } from './oauth-clients/oauth-clients.module';
     AuthenticationModule,
     CacheModule,
     OauthClientsModule,
+    SeederModule,
   ],
   controllers: [AppController],
   providers: [AppService],

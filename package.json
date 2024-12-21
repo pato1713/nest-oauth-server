@@ -9,6 +9,10 @@
     "register-path": "node -r tsconfig-paths/register -r ts-node/register",
     "build": "nest build --exec \"yarn register-path\"",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "migration:generate": "yarn run typeorm -- migration:generate",
+    "migration:run": "yarn run typeorm -- migration:run",
+    "migration:revert": "yarn run typeorm -- migration:revert",
+    "seed": "ts-node -r tsconfig-paths/register src/seeder/main.ts",
     "start": "nest start --exec \"yarn register-path\"",
     "start:dev": "nest start --watch --exec \"yarn register-path\"",
     "start:debug": "nest start --debug --watch --exec \"yarn register-path\"",
@@ -19,10 +23,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "yarn register-path ./node_modules/typeorm/cli.js -d src/config/typeorm.config.ts",
-    "migration:generate": "npm run typeorm -- migration:generate",
-    "migration:run": "npm run typeorm -- migration:run",
-    "migration:revert": "npm run typeorm -- migration:revert"
+    "typeorm": "yarn register-path ./node_modules/typeorm/cli.js -d src/config/typeorm.config.ts"
   },
   "dependencies": {
     "@keyv/redis": "^4.0.2",

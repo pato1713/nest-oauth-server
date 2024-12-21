@@ -12,6 +12,8 @@ import { NODE_ENV } from '@/app/constants/app.constant';
  *
  * 1. CLI migrations (through typeorm.config.ts)
  * 2. Runtime database connection (through database.module.ts)
+ * 3. Seeding (through seeds/oauth-clients.seeder.ts)
+ *
  */
 
 config();
