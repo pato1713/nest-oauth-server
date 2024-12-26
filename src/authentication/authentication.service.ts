@@ -1,5 +1,5 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { QueryRunner, Repository } from 'typeorm';
+import { DataSource, QueryRunner, Repository } from 'typeorm';
 import { UserService } from '@/user/user.service';
 import { UserEntity } from '@/user/entities/user.entity';
 import { AuthenticationDto } from './dtos/authentication.dto';
@@ -18,6 +18,9 @@ export class AuthenticationService {
     private readonly authenticationRepository: Repository<AuthenticationEntity>,
     private readonly _userService: UserService,
     private readonly _passwordService: PasswordService,
+    // TODO: find a better way to reuse transaction logic
+    // data source is needed by transaction decorator
+    private readonly _dataSource: DataSource,
   ) {}
 
   @Transaction()
@@ -56,13 +59,11 @@ export class AuthenticationService {
         authentication,
         queryRunner,
       );
-
       return user;
     } catch (error) {
       if (error?.code === PosgresErrorCode.UniqueViolation) {
         throw new UserAlreadyExistExeption();
       }
-
       throw new InternalServerErrorException();
     }
   }

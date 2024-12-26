@@ -11,7 +11,7 @@ export function Transaction(): MethodDecorator {
     descriptor.value = async function (...args: any[]) {
       const dataSource = this._dataSource as DataSource;
       const queryRunner = dataSource.createQueryRunner();
-      
+
       await queryRunner.connect();
       await queryRunner.startTransaction();
 

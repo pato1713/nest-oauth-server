@@ -1,10 +1,10 @@
 import { CacheService } from '@/cache/cache.service';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { OAuthAuthorizationDto } from './dtos/OAuthAuthorization.dto';
+import { OAuthAuthorizationDto } from './dtos/oauth-authorization.dto';
 
 @Injectable()
-export class OauthClientsService {
+export class OAuthClientsService {
   constructor(private readonly _cacheService: CacheService) {}
 
   async createAuthorizationTransaction(

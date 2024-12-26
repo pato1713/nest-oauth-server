@@ -1,4 +1,5 @@
 import {
+  DataSource,
   EntitySubscriberInterface,
   EventSubscriber,
   InsertEvent,
@@ -11,7 +12,12 @@ import { PasswordService } from '@/password/password.service';
 export class AuthenticationSubscriber
   implements EntitySubscriberInterface<AuthenticationEntity>
 {
-  constructor(private readonly _passwordService: PasswordService) {}
+  constructor(
+    private readonly _dataSource: DataSource,
+    private readonly _passwordService: PasswordService,
+  ) {
+    this._dataSource.subscribers.push(this);
+  }
 
   listenTo(): Function | string {
     return AuthenticationEntity;

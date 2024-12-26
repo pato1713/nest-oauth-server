@@ -19,14 +19,14 @@ import { GetCookie } from '@/common/decorators/get-cookie.decorator';
 import { ViewExceptionFilter } from '@/common/filters/view.exception.filter';
 import { InvalidCredentialsException } from './exceptions/invalid-credentials.exception';
 import { ExpiredCacheException } from './exceptions/expired-cache.exception';
-import { OauthClientsService } from '@/oauth-clients/oauth-clients.service';
-import { OAuthAuthorizationDto } from '@/oauth-clients/dtos/OAuthAuthorization.dto';
+import { OAuthAuthorizationDto } from '@/oauth-clients/dtos/oauth-authorization.dto';
+import { OAuthClientsService } from '@/oauth-clients/oauth-clients.service';
 
 @Controller('auth')
 export class AuthenticationController {
   constructor(
     private readonly _authenticationService: AuthenticationService,
-    private readonly _oauthClientsService: OauthClientsService,
+    private readonly _oauthClientsService: OAuthClientsService,
   ) {}
 
   @Get('authorize')

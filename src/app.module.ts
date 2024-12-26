@@ -7,9 +7,9 @@ import { ConfigModule } from './config/config.module';
 import { DatabaseModule } from './database/database.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { CacheModule } from './cache/cache.module';
-import { OauthClientsModule } from './oauth-clients/oauth-clients.module';
 import { SeederModule } from './seeder/seeder.module';
 import { PasswordModule } from './password/password.module';
+import { OAuthClientsModule } from './oauth-clients/oauth-clients.module';
 
 @Module({
   imports: [
@@ -19,7 +19,7 @@ import { PasswordModule } from './password/password.module';
     ConfigModule,
     AuthenticationModule,
     CacheModule,
-    OauthClientsModule,
+    OAuthClientsModule,
     SeederModule,
     PasswordModule,
   ],

@@ -1,27 +1,23 @@
 import { Module } from '@nestjs/common';
-import { SeederService } from './seeder.sevice';
-import { OauthClientsSeederService } from './seeders/oauth-clients.seeder';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { OAuthClientEntity } from '@/oauth-clients/entities/oauth-client.entity';
 import { getTypeOrmConfig } from '@/config/typeorm.config';
-import { AuthenticationSubscriber } from '@/authentication/subscribers/authentication.subscriber';
-import { PasswordModule } from '@/password/password.module';
+import { OAuthClientEntity } from '@/oauth-clients/entities/oauth-client.entity';
+import { OAuthClientsSeederService } from './seeders/oauth-clients/oauth-clients.seeder';
+import { UsersSeederService } from './seeders/users/users.seeder';
+import { AuthenticationModule } from '@/authentication/authentication.module';
 
 @Module({
   imports: [
-    PasswordModule,
+    AuthenticationModule,
     TypeOrmModule.forFeature([OAuthClientEntity]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        ...getTypeOrmConfig(configService),
-        subscribers: [AuthenticationSubscriber],
-      }),
+      useFactory: (configService: ConfigService) =>
+        getTypeOrmConfig(configService),
     }),
   ],
-  providers: [SeederService, OauthClientsSeederService],
-  exports: [SeederService],
+  providers: [OAuthClientsSeederService, UsersSeederService],
 })
 export class SeederModule {}
