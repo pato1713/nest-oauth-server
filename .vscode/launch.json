@@ -10,9 +10,11 @@
       "port": 9229,
       "address": "localhost",
       "restart": true,
-      "sourceMaps": true,
       "skipFiles": ["<node_internals>/**"],
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
+      "sourceMaps": true,
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "localRoot": "${workspaceFolder}", // Source files (local machine)
+      "remoteRoot": "/app"       // Source files (inside container)
     }
   ]
 }

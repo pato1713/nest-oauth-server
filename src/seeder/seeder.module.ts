@@ -6,9 +6,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { OAuthClientEntity } from '@/oauth-clients/entities/oauth-client.entity';
 import { getTypeOrmConfig } from '@/config/typeorm.config';
 import { AuthenticationSubscriber } from '@/authentication/subscribers/authentication.subscriber';
+import { PasswordModule } from '@/password/password.module';
 
 @Module({
   imports: [
+    PasswordModule,
     TypeOrmModule.forFeature([OAuthClientEntity]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

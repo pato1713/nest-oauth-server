@@ -1,5 +1,3 @@
-version: '3.5'
-
 volumes:
   pgdata:
     driver: local
@@ -36,7 +34,7 @@ services:
       - '.env'
     environment:
       - PORT=${PORT}
-      - NODE_ENV=development
+      - NODE_ENV=${NODE_ENV}
     ports:
       - 3000:3000
       - 9229:9229

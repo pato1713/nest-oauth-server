@@ -5,12 +5,14 @@ import {
   UpdateEvent,
 } from 'typeorm';
 import { AuthenticationEntity } from '../entities/authentication.entity';
-import { AuthenticationProvider } from '../providers/authentication.provider';
+import { PasswordService } from '@/password/password.service';
 
 @EventSubscriber()
 export class AuthenticationSubscriber
   implements EntitySubscriberInterface<AuthenticationEntity>
 {
+  constructor(private readonly _passwordService: PasswordService) {}
+
   listenTo(): Function | string {
     return AuthenticationEntity;
   }
@@ -19,7 +21,7 @@ export class AuthenticationSubscriber
     entity,
   }: InsertEvent<AuthenticationEntity>): Promise<void> {
     if (entity.password) {
-      entity.password = await AuthenticationProvider.generateHash(
+      entity.password = await this._passwordService.generateHash(
         entity.password,
       );
     }
@@ -34,7 +36,7 @@ export class AuthenticationSubscriber
     databaseEntity,
   }: UpdateEvent<AuthenticationEntity>): Promise<void> {
     if (entity.password) {
-      const password = await AuthenticationProvider.generateHash(
+      const password = await this._passwordService.generateHash(
         entity.password,
       );
 

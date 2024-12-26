@@ -5,28 +5,31 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Query,
   Redirect,
   Render,
-  Req,
-  Res,
   UseFilters,
 } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { RegistrationDto } from './dtos/registration.dto';
 import { UserEntity } from '@/user/entities/user.entity';
-import { AuthorizationDto } from './dtos/authorization.dto';
 import { AuthenticationDto } from './dtos/authentication.dto';
 import { SetCookie } from '@/common/decorators/set-cookie.decorator';
 import { GetCookie } from '@/common/decorators/get-cookie.decorator';
 import { ViewExceptionFilter } from '@/common/filters/view.exception.filter';
 import { InvalidCredentialsException } from './exceptions/invalid-credentials.exception';
 import { ExpiredCacheException } from './exceptions/expired-cache.exception';
+import { OauthClientsService } from '@/oauth-clients/oauth-clients.service';
+import { OAuthAuthorizationDto } from '@/oauth-clients/dtos/OAuthAuthorization.dto';
 
-@Controller()
+@Controller('auth')
 export class AuthenticationController {
-  constructor(private readonly _authenticationService: AuthenticationService) {}
+  constructor(
+    private readonly _authenticationService: AuthenticationService,
+    private readonly _oauthClientsService: OauthClientsService,
+  ) {}
 
-  @Post('authorize')
+  @Get('authorize')
   @Render('login')
   @SetCookie('oauth_transaction', {
     httpOnly: true,
@@ -34,10 +37,10 @@ export class AuthenticationController {
     sameSite: 'lax',
     maxAge: 3600,
   })
-  async authorize(@Body() authorization: AuthorizationDto) {
+  async authorize(@Query() oauthAuthorization: OAuthAuthorizationDto) {
     const transactionId =
-      await this._authenticationService.createAuthorizationTransaction(
-        authorization,
+      await this._oauthClientsService.createAuthorizationTransaction(
+        oauthAuthorization,
       );
 
     return { transaction_id: transactionId };
@@ -59,7 +62,7 @@ export class AuthenticationController {
     }
 
     const authorization =
-      await this._authenticationService.getAuthorization(transactionId);
+      await this._oauthClientsService.getAuthorization(transactionId);
 
     // no authorization found - meaning the cache has expired
     if (!authorization) {
@@ -68,19 +71,8 @@ export class AuthenticationController {
 
     return {
       url: authorization.redirectUri,
-      statursCode: HttpStatus.FOUND,
+      statusCode: HttpStatus.FOUND,
     };
-  }
-
-  @Get('register')
-  async getRegisterPage(@Req() req, @Res() res) {
-    // Check if user is already logged in
-    if (req?.session?.user) {
-      // Proceed directly to consent or issue authorization code
-      return res.redirect(`/consent?client_id=${req.query.client_id}`);
-    }
-    // Render the login form
-    return res.render('register', { client_id: req.query.client_id });
   }
 
   @Post('register')
@@ -90,4 +82,8 @@ export class AuthenticationController {
   ): Promise<UserEntity> {
     return this._authenticationService.registration(registrationDto);
   }
+
+  @Get('register')
+  @Render('register')
+  async registerPage() {}
 }

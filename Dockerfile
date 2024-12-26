@@ -21,8 +21,9 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install
 COPY . .
-RUN yarn build
-CMD ["yarn", "start:dev", "NODE_OPTIONS='--inspect=0.0.0.0:9229'" ]
+
+# Start the app with debugging and hot-reloading enabled
+CMD ["yarn", "start:debug"]
 
 # Final stage selection
 FROM ${NODE_ENV:-development}

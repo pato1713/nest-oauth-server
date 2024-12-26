@@ -4,14 +4,15 @@ import { AuthenticationController } from './authentication.controller';
 import { UserModule } from '@/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthenticationEntity } from './entities/authentication.entity';
-import { CacheModule } from '@/cache/cache.module';
-import { CacheService } from '@/cache/cache.service';
+import { OauthClientsModule } from '@/oauth-clients/oauth-clients.module';
+import { PasswordModule } from '@/password/password.module';
 
 @Module({
   imports: [
     UserModule,
+    PasswordModule,
+    OauthClientsModule,
     TypeOrmModule.forFeature([AuthenticationEntity]),
-    CacheModule,
   ],
   providers: [AuthenticationService],
   controllers: [AuthenticationController],

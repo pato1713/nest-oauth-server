@@ -1,5 +1,5 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { DataSource, QueryRunner, Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { UserService } from '@/user/user.service';
 import { UserEntity } from '@/user/entities/user.entity';
 import { AuthenticationDto } from './dtos/authentication.dto';
@@ -8,11 +8,8 @@ import { PosgresErrorCode } from '@/database/constraints/error.constraint';
 import { RegistrationDto } from './dtos/registration.dto';
 import { UserAlreadyExistExeption } from './exceptions/user-already-exist.exception';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthorizationDto } from './dtos/authorization.dto';
 import { Transaction } from '@/common/decorators/transaction.decorator';
-import { AuthenticationProvider } from './providers/authentication.provider';
-import { randomUUID } from 'crypto';
-import { CacheService } from '@/cache/cache.service';
+import { PasswordService } from '@/password/password.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -20,20 +17,8 @@ export class AuthenticationService {
     @InjectRepository(AuthenticationEntity)
     private readonly authenticationRepository: Repository<AuthenticationEntity>,
     private readonly _userService: UserService,
-    private readonly _cacheService: CacheService,
+    private readonly _passwordService: PasswordService,
   ) {}
-
-  async createAuthorizationTransaction(authorization: AuthorizationDto) {
-    const transactionId = randomUUID();
-    const result = await this._cacheService.set(transactionId, authorization);
-
-    // TODO: Replace with meaningful error
-    if (!result) {
-      throw new InternalServerErrorException();
-    }
-
-    return transactionId;
-  }
 
   @Transaction()
   async hasValidCredentials(
@@ -47,19 +32,12 @@ export class AuthenticationService {
 
     if (!authentication) return false;
 
-    const isValidPassword = await AuthenticationProvider.validatePassword(
+    const isValidPassword = await this._passwordService.validatePassword(
       authentication.password,
       authenticationDto.password,
     );
 
     return isValidPassword;
-  }
-
-  async getAuthorization(transactionId: string) {
-    const authorization =
-      await this._cacheService.get<AuthorizationDto>(transactionId);
-
-    return authorization;
   }
 
   @Transaction()
