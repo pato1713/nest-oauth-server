@@ -3,7 +3,7 @@ import { CreateUserDto } from '@/user/dtos/user.dto';
 
 export const createRegistrationMock = (id: number): RegistrationDto => ({
   username: `username_${id}`,
-  email: `email_${id}`,
+  email: `email_${id}@email.com`,
   password: `password_${id}`,
 });
 
