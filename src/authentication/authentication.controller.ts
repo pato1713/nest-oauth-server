@@ -30,12 +30,12 @@ export class AuthenticationController {
   ) {}
 
   @Get('authorize')
-  @Render('login')
+  @Redirect('login')
   @SetCookie('oauth_transaction', {
     httpOnly: true,
     secure: true,
     sameSite: 'lax',
-    maxAge: 3600,
+    maxAge: 15 * 60 * 1000, // 15 minutes
   })
   async authorize(@Query() oauthAuthorization: OAuthAuthorizationDto) {
     const transactionId =
@@ -43,8 +43,12 @@ export class AuthenticationController {
         oauthAuthorization,
       );
 
-    return { transaction_id: transactionId };
+    return transactionId;
   }
+
+  @Get('login')
+  @Render('login')
+  async loginPage() {}
 
   @Post('login')
   @Redirect() // empty so url is returned

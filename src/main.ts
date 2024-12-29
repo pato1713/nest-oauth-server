@@ -4,15 +4,26 @@ import { ConfigService } from '@nestjs/config';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import { CookieInterceptor } from './common/interceptors/cookie.interceptor';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  const reflecor = app.get(Reflector);
+  const reflector = app.get(Reflector);
   const configService = app.get(ConfigService);
   const PORT = configService.get<number>('PORT');
 
+  // setup middleware
+  app.use(cookieParser());
+
+  // setup global pipes
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(reflecor));
+
+  // setup global interceptors
+  app.useGlobalInterceptors(
+    new ClassSerializerInterceptor(reflector),
+    new CookieInterceptor(reflector),
+  );
 
   // setup views part of the app
   app.useStaticAssets(join(__dirname, '..', 'public'));
