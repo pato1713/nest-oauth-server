@@ -4,9 +4,9 @@ import { UserService } from '@/user/user.service';
 import { UserEntity } from '@/user/entities/user.entity';
 import { AuthenticationDto } from './dtos/authentication.dto';
 import { AuthenticationEntity } from './entities/authentication.entity';
-import { PosgresErrorCode } from '@/database/constraints/error.constraint';
+import { PostgresErrorCode } from '@/database/constraints/error.constraint';
 import { RegistrationDto } from './dtos/registration.dto';
-import { UserAlreadyExistExeption } from './exceptions/user-already-exist.exception';
+import { UserAlreadyExistException } from './exceptions/user-already-exist.exception';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Transaction } from '@/common/decorators/transaction.decorator';
 import { PasswordService } from '@/password/password.service';
@@ -61,8 +61,8 @@ export class AuthenticationService {
       );
       return user;
     } catch (error) {
-      if (error?.code === PosgresErrorCode.UniqueViolation) {
-        throw new UserAlreadyExistExeption();
+      if (error?.code === PostgresErrorCode.UniqueViolation) {
+        throw new UserAlreadyExistException();
       }
       throw new InternalServerErrorException();
     }

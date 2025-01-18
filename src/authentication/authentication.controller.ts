@@ -51,7 +51,7 @@ export class AuthenticationController {
   async loginPage() {}
 
   @Post('login')
-  @Redirect() // empty so url is returned
+  @Redirect() // empty so it accepts value returned from method
   @UseFilters(ViewExceptionFilter)
   async login(
     @Body() authenticationDto: AuthenticationDto,
@@ -60,7 +60,7 @@ export class AuthenticationController {
     const isValid =
       await this._authenticationService.hasValidCredentials(authenticationDto);
 
-    // return to login page and display error   if credentials are invalid
+    // return to login page and display error if credentials are invalid
     if (!isValid) {
       throw new InvalidCredentialsException(authenticationDto.email);
     }
@@ -73,8 +73,15 @@ export class AuthenticationController {
       throw new ExpiredCacheException();
     }
 
+    // delete authorization from cache and prepare redirect uri
+    await this._oauthClientsService.deleteAuthorization(transactionId);
+    const authCode = await this._oauthClientsService.getAuthorizationCode();
+
+    const redirectUri = new URL(authorization.redirectUri);
+    redirectUri.searchParams.set('code', authCode);
+
     return {
-      url: authorization.redirectUri,
+      url: redirectUri.toString(),
       statusCode: HttpStatus.FOUND,
     };
   }

@@ -1,6 +1,6 @@
 import { CacheService } from '@/cache/cache.service';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { randomUUID } from 'crypto';
+import { randomUUID, randomBytes } from 'crypto';
 import { OAuthAuthorizationDto } from './dtos/oauth-authorization.dto';
 
 @Injectable()
@@ -29,5 +29,14 @@ export class OAuthClientsService {
       await this._cacheService.get<OAuthAuthorizationDto>(transactionId);
 
     return authorization;
+  }
+
+  async deleteAuthorization(transactionId: string) {
+    return await this._cacheService.delete(transactionId);
+  }
+
+  async getAuthorizationCode() {
+    const authCode = randomBytes(32).toString('base64url');
+    return authCode;
   }
 }
