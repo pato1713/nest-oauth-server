@@ -10,6 +10,7 @@ import { CacheModule } from './cache/cache.module';
 import { SeederModule } from './seeder/seeder.module';
 import { PasswordModule } from './password/password.module';
 import { OAuthClientsModule } from './oauth-clients/oauth-clients.module';
+import { DiscoveryModule } from './discovery/discovery.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { OAuthClientsModule } from './oauth-clients/oauth-clients.module';
     OAuthClientsModule,
     SeederModule,
     PasswordModule,
+    DiscoveryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
